@@ -12,7 +12,7 @@
           (recur ns))))
 
 (defn operate!
-  "Sends a function to operate on channels current state,
+  "Sends a function to operate on current state,
   as of: (operate #(+10 %))"
   [fn]
   (put! main-channel fn))

@@ -6,7 +6,6 @@
             [clojure.test.check :as tc]
             [clojure.test.check.properties :as prop]))
 
-
 (s/def ::message-type #{::success ::fail})
 (s/def ::message-body string?)
 (s/def ::message (s/keys :req [::message-type ::message-body]))
@@ -24,6 +23,12 @@
               (do (p/pprint ml) ml)
               (recur ml))))
 
+(as-> (a/chan) fail-channel
+      (a/sub message-publisher ::fail fail-channel)
+      (a/go-loop []
+        (println "MESSAGE FAILED: " (::message-body (<! fail-channel)))
+        (recur)))
+
 (defn send-msg [msg]
   (put! message-channel msg))
 
@@ -31,7 +36,9 @@
 
 (g/generate msg-gen)
 
+
 (def send-prop (prop/for-all [msg msg-gen]
                              (send-msg msg)))
 
-(tc/quick-check 1 send-prop)
+
+(tc/quick-check 100 send-prop)

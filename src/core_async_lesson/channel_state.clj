@@ -1,4 +1,4 @@
-(ns core-async-lesson.core
+(ns core-async-lesson.channel_state
   (:require [clojure.core.async :as a :refer :all]))
 
 (def main-channel (a/chan))

@@ -1,7 +1,11 @@
 (ns core-async-lesson.core-test
   (:require [clojure.test :refer :all]
-            [core-async-lesson.core :refer :all]))
+            [core-async-lesson.channel_state :refer :all]
+            [core-async-lesson.pub-sub :as ps]
+            [clojure.test.check :as tc]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+
+(deftest coverage-check
+  (tc/quick-check 100 (ps/send-prop))
+  (is true))
+
